@@ -268,7 +268,7 @@ int main(int argc, const char * argv[])
 
     MVector<double> v2(ca, ca+3);
 
-    MVector<double> ret = v + 3;
+    MVector<double> ret = v - 100;
     ret.show();
 
     return 0;
