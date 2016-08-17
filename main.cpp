@@ -104,6 +104,13 @@ public:
 
     }
 
+    //======operators===========
+
+    T &operator[](int idx)
+    {
+        return m_vec.at(idx);
+    }
+
     //==============staic
     static T pow(T x, int n)
     {
@@ -111,9 +118,7 @@ public:
         T ret = 1;
 
         for (int i = 0; i < n; ++i)
-        {
             ret *= x;
-        }
         return ret;
     }
 
@@ -143,6 +148,7 @@ int main(int argc, const char * argv[])
         v.push_back(i);
     }
 
+    v[2] = 200;
 
     cout << v.sum() << endl;
     cout << v.mean() << endl;
