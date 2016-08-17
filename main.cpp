@@ -15,6 +15,14 @@ class MVector
     vector_t m_vec;
 public:
 
+
+
+    MVector(void):
+        m_vec()
+    {
+
+    }
+
     size_t size(void ) const
     {
         return m_vec.size();
@@ -111,6 +119,16 @@ public:
         return m_vec.at(idx);
     }
 
+    //---------control============
+
+    template <typename SrcT>
+    void attach(SrcT itr,  SrcT end)
+    {
+        m_vec.clear();
+        while (itr != end)
+            m_vec.push_back(*itr++);
+    }
+
     //==============staic
     static T pow(T x, int n)
     {
@@ -160,5 +178,20 @@ int main(int argc, const char * argv[])
     v.show();
     v.eachPower(2);
     v.show();
+
+    int ca[] = {1, 2, 3};
+
+    v.attach(ca, ca + 3);
+    v.show();
+
+    vector<double> sv;
+    sv.push_back(100);
+    sv.push_back(200);
+    sv.push_back(300);
+
+    v.attach(sv.begin(), sv.end());
+    v.show();
+
+
     return 0;
 }
