@@ -150,7 +150,7 @@ public:
     //----- imp ---------
 
     template <class Op1_t, class Op2_t>
-    T impBinOperator(const Op1_t & op1, const Op2_t & op2, OperatorType op)
+    static T impBinOperator(const Op1_t & op1, const Op2_t & op2, OperatorType op)
     {
         T ret;
 
@@ -165,7 +165,7 @@ public:
             case OP_MULT:
                 ret = op1 * op2;
                 break;
-            case OP_PLUS:
+            case OP_DIVIDE:
                 ret = op1 / op2;
                 break;
             default:
@@ -175,14 +175,14 @@ public:
     }
 
 
-    MVector<T> opVecVec(const MVector & v1, const MVector & v2)
+    MVector<T> opVecVec(const MVector & v1, const MVector & v2, OperatorType op) const
     {
         assert(v1.size() == v2.size());
         MVector<T> ret;
 
         for (int i = 0; i < v1.size(); ++i)
         {
-            ret.push_back(v1[i] + v2[i]);
+            ret.push_back(impBinOperator(v1[i], v2[i], op));
         }
 
         return ret;
@@ -195,15 +195,7 @@ public:
 
     MVector<T> operator+(const MVector & v) const
     {
-        assert(v.size() == m_vec.size());
-        MVector<double> ret;
-
-        for (int i = 0; i < v.size(); ++i)
-        {
-            ret.push_back(m_vec[i] + v[i]);
-        }
-
-        return ret;
+        return opVecVec(*this, v, OP_PLUS);
     }
 
     MVector<T> operator-(const MVector & v) const
@@ -324,7 +316,7 @@ int main(int argc, const char * argv[])
 
     MVector<double> v2(ca, ca+3);
 
-    MVector<double> ret = v - 100;
+    MVector<double> ret = v + v2;
     ret.show();
 
     return 0;
