@@ -1,3 +1,5 @@
+#ifndef MVECTOR_H
+#define MVECTOR_H
 #include <stdio.h>
 
 
@@ -253,29 +255,16 @@ public:
         return opVecScale(*this, x, OP_DIVIDE);
     }
 
-    MVector<T> operator^(int n)
-    {
-        assert(n >= 0);
-
-        MVector<T> ret = *this;
-        ret.eachPower(n);
-        return ret;
-    }
 
 
     //---------control============
+
     template <typename SrcT>
     void attach(SrcT itr,  SrcT end)
     {
         m_vec.clear();
         while (itr != end)
             m_vec.push_back(*itr++);
-    }
-
-    template <typename SrcT>
-    void attach(SrcT itr)
-    {
-        attach(itr.begin(), itr.end());
     }
 
     //==============staic
@@ -305,60 +294,4 @@ public:
 
 
 
-int main(int argc, const char * argv[])
-{
-    using namespace std;
-
-
-    int a[3] = {1, 2,3};
-
-    MVector<double> v(a, a+3);
-    v.attach(a, a+3);
-
-    v.show();
-
-    MVector<double> ret = v / 3;
-
-    ret.show();
-
-    ret = v + 10;
-
-    ret.show();
-
-    cout << "std = " << ret.stddev() << endl;
-
-    MVector<double> v2 = v;
-
-
-    cout << "-===============" << endl;
-    v.show();
-    v2 = v2 + 10;
-    v2.show();
-
-
-
-    MVector<double> rr = v + 100;
-    rr.show();
-
-    cout << "-===============" << endl;
-    vector<double> xx;
-    xx.push_back(1);
-    xx.push_back(2);
-    xx.push_back(3);
-
-
-    MVector<double> aa(xx);
-    aa.attach(xx);
-
-    aa = aa^3;
-    aa.show();
-
-
-    //==========
-    //
-    //
-
-
-    ///==========
-    return 0;
-}
+#endif /* end of include guard: MVECTOR_H */
