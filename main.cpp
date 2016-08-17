@@ -15,6 +15,15 @@ class MVector
     vector_t m_vec;
 public:
 
+    enum OperatorType
+    {
+        OP_PLUS,
+        OP_MINUS,
+        OP_MULT,
+        OP_DIVIDE,
+
+    };
+
     MVector(void):
         m_vec()
     {
@@ -137,6 +146,53 @@ public:
         return m_vec.at(idx);
     }
 
+
+    //----- imp ---------
+
+    template <class Op1_t, class Op2_t>
+    T impBinOperator(const Op1_t & op1, const Op2_t & op2, OperatorType op)
+    {
+        T ret;
+
+        switch (op)
+        {
+            case OP_PLUS:
+                ret = op1 + op2;
+                break;
+            case OP_MINUS:
+                ret = op1 - op2;
+                break;
+            case OP_MULT:
+                ret = op1 * op2;
+                break;
+            case OP_PLUS:
+                ret = op1 / op2;
+                break;
+            default:
+                assert(false);
+        }
+        return ret;
+    }
+
+
+    MVector<T> opVecVec(const MVector & v1, const MVector & v2)
+    {
+        assert(v1.size() == v2.size());
+        MVector<T> ret;
+
+        for (int i = 0; i < v1.size(); ++i)
+        {
+            ret.push_back(v1[i] + v2[i]);
+        }
+
+        return ret;
+
+    }
+
+
+    //-------------------
+
+
     MVector<T> operator+(const MVector & v) const
     {
         assert(v.size() == m_vec.size());
@@ -145,6 +201,19 @@ public:
         for (int i = 0; i < v.size(); ++i)
         {
             ret.push_back(m_vec[i] + v[i]);
+        }
+
+        return ret;
+    }
+
+    MVector<T> operator-(const MVector & v) const
+    {
+        assert(v.size() == m_vec.size());
+        MVector<double> ret;
+
+        for (int i = 0; i < v.size(); ++i)
+        {
+            ret.push_back(m_vec[i] - v[i]);
         }
 
         return ret;
@@ -164,20 +233,6 @@ public:
         return ret;
     }
 
-
-    MVector<T> operator-(const MVector & v) const
-    {
-        assert(v.size() == m_vec.size());
-        MVector<double> ret;
-
-        for (int i = 0; i < v.size(); ++i)
-        {
-            ret.push_back(m_vec[i] - v[i]);
-        }
-
-        return ret;
-    }
-
     template <class scale_t>
     MVector<T> operator-(const scale_t & x) const
     {
@@ -191,6 +246,7 @@ public:
 
         return ret;
     }
+
 
     //---------control============
 
