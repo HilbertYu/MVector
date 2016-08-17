@@ -6,13 +6,15 @@
 #include <iostream>
 #include <assert.h>
 
-template <class T>
+template <typename T>
 class MVector
 {
-    std::deque<T> m_vec;
+    typedef std::deque<T> vector_t;
+
+    vector_t m_vec;
 public:
 
-    void size(void ) const
+    size_t size(void ) const
     {
         return m_vec.size();
     }
@@ -43,7 +45,6 @@ public:
         const T & ret = m_vec.back();
         m_vec.pop_back();
         return ret;
-
     }
 
     T pop_front(const T & v)
@@ -53,22 +54,39 @@ public:
         m_vec.pop_front();
         return ret;
     }
+    //=====================
+
+    T sum(void) const
+    {
+        assert(!empty());
+        T ret = 0;
+        typename vector_t::const_iterator itr = m_vec.begin();
+        for (; itr != m_vec.end(); ++itr)
+            ret += *itr;
+        return ret;
+    }
+
+    T mean(void) const
+    {
+        assert(!empty());
+        return sum()/size();
+    }
 
 };
 
 int main(int argc, const char * argv[])
 {
     using namespace std;
-    printf("Hello\n");
-
-    std::vector<int> xx;
-    
-    xx.push_back(10);
-    cout << xx.size() << endl;
-    xx.clear();
-    cout << xx.size() << endl;
 
     MVector<double> v;
+
+    for (int i = 0; i <= 10; ++i)
+    {
+        v.push_back(i);
+    }
+
+    cout << v.sum() << endl;
+    cout << v.mean() << endl;
 
 
     return 0;
