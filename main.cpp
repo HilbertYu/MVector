@@ -5,6 +5,7 @@
 #include <deque>
 #include <iostream>
 #include <assert.h>
+#include <math.h>
 
 template <typename T>
 class MVector
@@ -72,25 +73,23 @@ public:
         return sum()/size();
     }
 
-    T variance(void) const
+    T var(int nl = 0) const
     {
-        assert(!empty());
+        assert(size() - nl > 0);
         T ret = 0;
 
         typename vector_t::const_iterator itr = m_vec.begin();
         T m = mean();
         for (; itr != m_vec.end(); ++itr)
-            ret += pow(*itr-2, 2);
-        return ret/size();
+            ret += pow(*itr - m, 2);
+        return ret/(size()-nl);
     }
 
-    T stddev(void) const
+    T stddev(int nl = 0) const
     {
         assert(!empty());
-        T ret = 0;
-
-        T var = variance();
-        return sqrt(var);
+        T v = var(nl);
+        return sqrt(v);
     }
 
     void eachPower(int n)
@@ -139,7 +138,7 @@ int main(int argc, const char * argv[])
 
     MVector<double> v;
 
-    for (int i = 0; i <= 10; ++i)
+    for (int i = 1; i <= 10; ++i)
     {
         v.push_back(i);
     }
@@ -147,6 +146,8 @@ int main(int argc, const char * argv[])
 
     cout << v.sum() << endl;
     cout << v.mean() << endl;
+    cout << v.stddev() << endl;
+    cout << v.var(1) << endl;
 
     cout << MVector<double>::pow(2,0) << endl;
 
