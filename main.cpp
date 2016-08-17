@@ -175,7 +175,8 @@ public:
     }
 
 
-    MVector<T> opVecVec(const MVector & v1, const MVector & v2, OperatorType op) const
+    static
+    MVector<T> opVecVec(const MVector & v1, const MVector & v2, OperatorType op)
     {
         assert(v1.size() == v2.size());
         MVector<T> ret;
@@ -187,6 +188,20 @@ public:
 
         return ret;
 
+    }
+
+    template <class scale_t>
+    static MVector<T> opVecScale(const MVector & v, const scale_t & s, OperatorType op)
+    {
+        assert(!v.empty());
+        MVector<T> ret;
+
+        for (int i = 0; i < v.size(); ++i)
+        {
+            ret.push_back(impBinOperator(v[i], s, op));
+        }
+
+        return ret;
     }
 
 
@@ -217,30 +232,27 @@ public:
     template <class scale_t>
     MVector<T> operator+(const scale_t & x) const
     {
-        assert(!empty());
-        MVector<double> ret;
-
-        for (int i = 0; i < m_vec.size(); ++i)
-        {
-            ret.push_back(m_vec[i] + x);
-        }
-
-        return ret;
+        return opVecScale(*this, x, OP_PLUS);
     }
 
     template <class scale_t>
     MVector<T> operator-(const scale_t & x) const
     {
-        assert(!empty());
-        MVector<double> ret;
-
-        for (int i = 0; i < m_vec.size(); ++i)
-        {
-            ret.push_back(m_vec[i] - x);
-        }
-
-        return ret;
+        return opVecScale(*this, x, OP_MINUS);
     }
+
+    template <class scale_t>
+    MVector<T> operator*(const scale_t & x) const
+    {
+        return opVecScale(*this, x, OP_MULT);
+    }
+
+    template <class scale_t>
+    MVector<T> operator/(const scale_t & x) const
+    {
+        return opVecScale(*this, x, OP_DIVIDE);
+    }
+
 
 
     //---------control============
@@ -319,13 +331,14 @@ int main(int argc, const char * argv[])
 
     MVector<double> v2(ca, ca+3);
 
-    MVector<double> ret = v + v2;
+    printf("===\n");
+    MVector<double> ret = v + 3;
     ret.show();
-    ret = ret - v2;
+    ret = ret -  10;
     ret.show();
-    ret = ret  * v2;
+    ret = ret  * 3;
     ret.show();
-    ret = ret  / v2;
+    ret = ret  / 2;
     ret.show();
 
     return 0;
