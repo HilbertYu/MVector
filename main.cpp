@@ -72,6 +72,40 @@ public:
         return sum()/size();
     }
 
+    T variance(void) const
+    {
+        assert(!empty());
+        T ret = 0;
+
+        typename vector_t::const_iterator itr = m_vec.begin();
+        T m = mean();
+        for (; itr != m_vec.end(); ++itr)
+            ret += pow(*itr-2, 2);
+        return ret/size();
+    }
+
+    T stddev(void) const
+    {
+        assert(!empty());
+        T ret = 0;
+
+        T var = variance();
+        return sqrt(var);
+    }
+
+    void eachPower(int n)
+    {
+        assert(n >= 0);
+
+        typename vector_t::iterator itr = m_vec.begin();
+        for (; itr != m_vec.end(); ++itr)
+        {
+            *itr = pow(*itr, n);
+        }
+
+    }
+
+    //==============staic
     static T pow(T x, int n)
     {
         assert(n >= 0);
@@ -82,6 +116,19 @@ public:
             ret *= x;
         }
         return ret;
+    }
+
+
+    //================= test
+    void show(void) const
+    {
+        using namespace std;
+        typename vector_t::const_iterator itr = m_vec.begin();
+        for (; itr != m_vec.end(); ++itr)
+            cout << *itr << " ";
+
+        cout << endl;
+
     }
 
 };
@@ -103,5 +150,8 @@ int main(int argc, const char * argv[])
 
     cout << MVector<double>::pow(2,0) << endl;
 
+    v.show();
+    v.eachPower(2);
+    v.show();
     return 0;
 }
