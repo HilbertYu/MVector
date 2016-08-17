@@ -150,6 +150,21 @@ public:
         return ret;
     }
 
+    template <class scale_t>
+    MVector<T> operator+(const scale_t & x) const
+    {
+        assert(!empty());
+        MVector<double> ret;
+
+        for (int i = 0; i < m_vec.size(); ++i)
+        {
+            ret.push_back(m_vec[i] + x);
+        }
+
+        return ret;
+    }
+
+
     MVector<T> operator-(const MVector & v) const
     {
         assert(v.size() == m_vec.size());
@@ -162,6 +177,21 @@ public:
 
         return ret;
     }
+
+    template <class scale_t>
+    MVector<T> operator-(const scale_t & x) const
+    {
+        assert(!empty());
+        MVector<double> ret;
+
+        for (int i = 0; i < m_vec.size(); ++i)
+        {
+            ret.push_back(m_vec[i] - x);
+        }
+
+        return ret;
+    }
+
     //---------control============
 
     template <typename SrcT>
@@ -238,7 +268,7 @@ int main(int argc, const char * argv[])
 
     MVector<double> v2(ca, ca+3);
 
-    MVector<double> ret = v - v2;
+    MVector<double> ret = v + 3;
     ret.show();
 
     return 0;
