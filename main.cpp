@@ -15,12 +15,17 @@ class MVector
     vector_t m_vec;
 public:
 
-
-
     MVector(void):
         m_vec()
     {
 
+    }
+
+    template <typename SrcT>
+    MVector(SrcT itr,  SrcT end):
+        m_vec()
+    {
+        attach(itr, end);
     }
 
     size_t size(void ) const
@@ -119,6 +124,23 @@ public:
         return m_vec.at(idx);
     }
 
+    const T &operator[](int idx) const
+    {
+        return m_vec.at(idx);
+    }
+
+    MVector<T> operator+(const MVector & v) const
+    {
+        assert(v.size() == m_vec.size());
+        MVector<double> ret;
+
+        for (int i = 0; i < v.size(); ++i)
+        {
+            ret.push_back(v[i] + m_vec[i]);
+        }
+
+        return ret;
+    }
     //---------control============
 
     template <typename SrcT>
@@ -154,6 +176,32 @@ public:
     }
 
 };
+
+class A
+{
+    public:
+        int m_val;
+#if 0
+        A operator+(const A & a)
+        {
+
+        }
+#endif
+
+        A operator+(const A & a)
+        {
+            A kk;
+            return kk;
+        }
+
+};
+
+
+void run(void)
+{
+
+
+}
 
 int main(int argc, const char * argv[])
 {
@@ -192,6 +240,10 @@ int main(int argc, const char * argv[])
     v.attach(sv.begin(), sv.end());
     v.show();
 
+    MVector<double> v2(ca, ca+3);
+
+    MVector<double> ret = v + v2;
+    ret.show();
 
     return 0;
 }
