@@ -200,16 +200,19 @@ public:
 
     MVector<T> operator-(const MVector & v) const
     {
-        assert(v.size() == m_vec.size());
-        MVector<double> ret;
-
-        for (int i = 0; i < v.size(); ++i)
-        {
-            ret.push_back(m_vec[i] - v[i]);
-        }
-
-        return ret;
+        return opVecVec(*this, v, OP_MINUS);
     }
+
+    MVector<T> operator*(const MVector & v) const
+    {
+        return opVecVec(*this, v, OP_MULT);
+    }
+
+    MVector<T> operator/(const MVector & v) const
+    {
+        return opVecVec(*this, v, OP_DIVIDE);
+    }
+
 
     template <class scale_t>
     MVector<T> operator+(const scale_t & x) const
@@ -317,6 +320,12 @@ int main(int argc, const char * argv[])
     MVector<double> v2(ca, ca+3);
 
     MVector<double> ret = v + v2;
+    ret.show();
+    ret = ret - v2;
+    ret.show();
+    ret = ret  * v2;
+    ret.show();
+    ret = ret  / v2;
     ret.show();
 
     return 0;
