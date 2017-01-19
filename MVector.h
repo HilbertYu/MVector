@@ -124,6 +124,16 @@ public:
         return sqrt(v);
     }
 
+    T norm(void) const
+    {
+        T ret = 0;
+        for (size_t i = 0; i != size(); ++i)
+        {
+            ret += m_vec[i] * m_vec[i];
+        }
+        return sqrt(ret);
+    }
+
     void eachPower(int n)
     {
         assert(n >= 0);
@@ -183,7 +193,7 @@ public:
         assert(v1.size() == v2.size());
         MVector<T> ret;
 
-        for (int i = 0; i < v1.size(); ++i)
+        for (size_t i = 0; i < v1.size(); ++i)
         {
             ret.push_back(impBinOperator(v1[i], v2[i], op));
         }
@@ -198,7 +208,7 @@ public:
         assert(!v.empty());
         MVector<T> ret;
 
-        for (int i = 0; i < v.size(); ++i)
+        for (size_t i = 0; i != v.size(); ++i)
         {
             ret.push_back(impBinOperator(v[i], s, op));
         }
@@ -210,7 +220,17 @@ public:
     //-------------------
 
 
-    MVector<T> operator+(const MVector & v) const
+    //bool operator<(const MVector<T> &v1, const<T> MVector &v2)
+    //bool operator<(const MVector<T> &v1, const MVector<T> &v2)
+    //bool operator<(const MVector<T> &v1) const
+
+    bool operator<(const MVector<T> &v) const
+    {
+        return m_vec < v.m_vec;
+    }
+
+
+    MVector<T> operator+(const MVector<T> & v) const
     {
         return opVecVec(*this, v, OP_PLUS);
     }
@@ -249,6 +269,14 @@ public:
         return opVecScale(*this, x, OP_MULT);
     }
 
+
+    template <class scale_t>
+    friend
+    MVector<T> operator*(const scale_t & x, const MVector<T> & v)
+    {
+        return opVecScale(v, x, OP_MULT);
+    }
+
     template <class scale_t>
     MVector<T> operator/(const scale_t & x) const
     {
@@ -256,6 +284,22 @@ public:
     }
 
 
+    //unit operator
+    MVector<T> roundInt(void) const
+    {
+        MVector<T> ret;
+
+        for (size_t i = 0; i != m_vec.size(); ++i)
+        {
+            int r = (m_vec[i] > 0)? (m_vec[i] + 0.5): (m_vec[i]-0.5);
+
+            ret.push_back(r);
+          //  ret.push_back((int)(m_vec[i] + 0.5));
+        }
+
+        return ret;
+
+    }
 
     //---------control============
 
@@ -288,6 +332,16 @@ public:
             cout << *itr << " ";
 
         cout << endl;
+    }
+
+
+    friend std::ostream& operator<<(std::ostream &os, const MVector<T> & v)
+    {
+        using namespace std;
+        typename vector_t::const_iterator itr = v.m_vec.begin();
+        for (; itr != v.m_vec.end(); ++itr)
+            os << *itr << " ";
+        return os;
     }
 
 };
