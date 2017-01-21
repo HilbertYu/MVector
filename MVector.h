@@ -1,8 +1,7 @@
 #ifndef MVECTOR_H
 #define MVECTOR_H
+
 #include <stdio.h>
-
-
 #include <vector>
 #include <deque>
 #include <iostream>
@@ -45,7 +44,6 @@ public:
     {
         attach(x.begin(), x.end());
     }
-
 
     size_t size(void ) const
     {
@@ -126,12 +124,7 @@ public:
 
     T norm(void) const
     {
-        T ret = 0;
-        for (size_t i = 0; i != size(); ++i)
-        {
-            ret += m_vec[i] * m_vec[i];
-        }
-        return sqrt(ret);
+        return sqrt((*this**this).sum());
     }
 
     void eachPower(int n)
@@ -188,10 +181,10 @@ public:
 
 
     static
-    MVector<T> opVecVec(const MVector & v1, const MVector & v2, OperatorType op)
+    MVector opVecVec(const MVector & v1, const MVector & v2, OperatorType op)
     {
         assert(v1.size() == v2.size());
-        MVector<T> ret;
+        MVector ret;
 
         for (size_t i = 0; i < v1.size(); ++i)
         {
@@ -203,10 +196,10 @@ public:
     }
 
     template <class scale_t>
-    static MVector<T> opVecScale(const MVector & v, const scale_t & s, OperatorType op)
+    static MVector opVecScale(const MVector & v, const scale_t & s, OperatorType op)
     {
         assert(!v.empty());
-        MVector<T> ret;
+        MVector ret;
 
         for (size_t i = 0; i != v.size(); ++i)
         {
@@ -218,87 +211,72 @@ public:
 
 
     //-------------------
-
-
-    //bool operator<(const MVector<T> &v1, const<T> MVector &v2)
-    //bool operator<(const MVector<T> &v1, const MVector<T> &v2)
-    //bool operator<(const MVector<T> &v1) const
-
-    bool operator<(const MVector<T> &v) const
+    bool operator<(const MVector &v) const
     {
         return m_vec < v.m_vec;
     }
 
-
-    MVector<T> operator+(const MVector<T> & v) const
+    MVector operator+(const MVector & v) const
     {
         return opVecVec(*this, v, OP_PLUS);
     }
 
-    MVector<T> operator-(const MVector & v) const
+    MVector operator-(const MVector & v) const
     {
         return opVecVec(*this, v, OP_MINUS);
     }
 
-    MVector<T> operator*(const MVector & v) const
+    MVector operator*(const MVector & v) const
     {
         return opVecVec(*this, v, OP_MULT);
     }
 
-    MVector<T> operator/(const MVector & v) const
+    MVector operator/(const MVector & v) const
     {
         return opVecVec(*this, v, OP_DIVIDE);
     }
 
 
     template <class scale_t>
-    MVector<T> operator+(const scale_t & x) const
+    MVector operator+(const scale_t & x) const
     {
         return opVecScale(*this, x, OP_PLUS);
     }
 
     template <class scale_t>
-    MVector<T> operator-(const scale_t & x) const
+    MVector operator-(const scale_t & x) const
     {
         return opVecScale(*this, x, OP_MINUS);
     }
 
     template <class scale_t>
-    MVector<T> operator*(const scale_t & x) const
+    MVector operator*(const scale_t & x) const
     {
         return opVecScale(*this, x, OP_MULT);
     }
 
-
     template <class scale_t>
-    friend
-    MVector<T> operator*(const scale_t & x, const MVector<T> & v)
-    {
-        return opVecScale(v, x, OP_MULT);
-    }
-
-    template <class scale_t>
-    MVector<T> operator/(const scale_t & x) const
+    MVector operator/(const scale_t & x) const
     {
         return opVecScale(*this, x, OP_DIVIDE);
     }
 
+    template <class scale_t>
+    friend MVector operator*(const scale_t & x, const MVector & v)
+    {
+        return v*x;
+    }
 
     //unit operator
-    MVector<T> roundInt(void) const
+    MVector roundInt(void) const
     {
-        MVector<T> ret;
-
+        MVector ret;
         for (size_t i = 0; i != m_vec.size(); ++i)
         {
             int r = (m_vec[i] > 0)? (m_vec[i] + 0.5): (m_vec[i]-0.5);
-
             ret.push_back(r);
-          //  ret.push_back((int)(m_vec[i] + 0.5));
         }
-
         return ret;
-
     }
 
     //---------control============
@@ -311,7 +289,7 @@ public:
             m_vec.push_back(*itr++);
     }
 
-    //==============staic
+    //==============staic===
     static T pow(T x, int n)
     {
         assert(n >= 0);
@@ -335,7 +313,7 @@ public:
     }
 
 
-    friend std::ostream& operator<<(std::ostream &os, const MVector<T> & v)
+    friend std::ostream& operator<<(std::ostream &os, const MVector & v)
     {
         using namespace std;
         typename vector_t::const_iterator itr = v.m_vec.begin();
